@@ -60,12 +60,12 @@ const divForm = document.querySelector('.form-style-2')
 
 
 dinos.forEach(dino => {
-    // const opt= document.createElement('option')   / mozda bez ovog
-    // select.textContent=`${dino.name}`
-    // select.value=`${dino.id}`
-    // select.appendChild(opt)  / i ovog..ali nemam vremena da testiram
+    const opt= document.createElement('option') 
+    opt.textContent=`${dino.name}`
+    opt.value=`${dino.name}`
+    select.appendChild(opt)  
 
-})  // ne znam zasto ne funkcionise..pa se nisam zadrzavao
+})  
 
 const divNar = document.querySelector("#item-container")
 
@@ -75,26 +75,7 @@ inputKupac = document.querySelector("#kupac")
 txtArea = document.querySelector(".textarea-field")
 
 form.addEventListener('submit', (e) => {
-    e.preventDefault()
-    const divItem = document.createElement('div')
-    divItem.className = "item"
-    divItem.innerHTML = `  <p><span>Купац:</span>${inputKupac.value}</p>
-    <p><span>Напомена:</span> ${txtArea.value}</p>
-    <p><span>Диносаурус: </span> ${select.value}</p>
-    <p><span>Цена: </span> 199</p>  
-    <p><button id="del">Обриши</button></p>`  //nemam vremena, trebao bih da izvadim dugme odavde..napravim ga posebno preko create element. i onda njega koristim za brisanje
-                                               //ovako brise samo zadnji delete :(
-    let niz = {
-        izabraniDIno: select.value,
-        Kupac: inputKupac.value,
-        Napomena: txtArea.value,
-        Cena: "199" //za sad ako imam vremena vraticu se//treba koristiti dinos [dinos.indexof(select.value)].cena
-    }
-    arr.push(niz)
-    console.log(arr)
-
-    divNar.appendChild(divItem)
-
+    
     if (inputKupac.value.length == 0) {
         window.alert("Nisu sva polja popunjena")
         return
@@ -107,14 +88,39 @@ form.addEventListener('submit', (e) => {
         window.alert("Unos kupac mora imati vise od 4 slova")
         return
     }
+    e.preventDefault()
+   let x = dinos.findIndex(el=> el.name == select.value)
 
-    const btn = document.querySelector('#del')
+    const divItem = document.createElement('div')
+    divItem.className = "item"
+    divItem.innerHTML = `  <p><span>Купац:</span>${inputKupac.value}</p>
+    <p><span>Напомена:</span> ${txtArea.value}</p>
+    <p><span>Диносаурус: </span> ${select.value}</p>
+    <p><span>Цена: </span> ${dinos[x].cena}</p>  
+    `  
+    let niz = {
+        izabraniDIno: select.value,
+        Kupac: inputKupac.value,
+        Napomena: txtArea.value,
+        Cena: dinos[x].cena
+    }
+    arr.push(niz)
+    console.log(arr)
+
+    divNar.appendChild(divItem)
+
+    const p = document.createElement('p')
+    const btn = document.createElement('button')
+    divItem.appendChild(p)
+    p.appendChild(btn)
+   btn.textContent="obrisi"
     btn.addEventListener('click', () => {
         btn.parentElement.parentElement.remove() 
 
-        // brisanje iz niza bih radio, arr.splice(arr.indexOd(niz).1)
+        arr.splice(arr.indexOf(niz),1)
     })
-
+    inputKupac.value=""
+    txtArea.value=""
 
 })
 
@@ -123,4 +129,5 @@ const btnIspis = document.querySelector("#btn-all")
 btnIspis.addEventListener('click', () => {
     console.log(arr)
 })
+console.log(dinos.indexOf("Efraasia"))
 
